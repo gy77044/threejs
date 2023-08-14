@@ -40312,12 +40312,19 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
+},{}],"img/ab.jpg":[function(require,module,exports) {
+module.exports = "/ab.c7f174ba.jpg";
+},{}],"img/bc.jpg":[function(require,module,exports) {
+module.exports = "/bc.2e52dc9b.jpg";
 },{}],"js/script.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
 var _OrbitControls = require("three/examples/jsm/controls/OrbitControls.js");
 var dat = _interopRequireWildcard(require("dat.gui"));
+var _ab = _interopRequireDefault(require("../img/ab.jpg"));
+var _bc = _interopRequireDefault(require("../img/bc.jpg"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 var renderer = new THREE.WebGLRenderer();
@@ -40326,6 +40333,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+// renderer.render(scene,camera)
 var orbit = new _OrbitControls.OrbitControls(camera, renderer.domElement);
 var axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
@@ -40378,13 +40386,43 @@ var spotLight = new THREE.SpotLight(0xffffff);
 scene.add(spotLight);
 spotLight.position.set(-100, 100, 0);
 spotLight.castShadow = true;
-spotLight.angle = 0.2;
 var sLightHelper = new THREE.SpotLightHelper(spotLight);
 scene.add(sLightHelper);
 
-// scene.fog = new THREE.Fog(0xFFFFFF, 0,200);
+// scene.fog = new THREE.Fog(0xffffff, 0, 200);
 scene.fog = new THREE.FogExp2(0xffffff, 0.01);
-renderer.setClearColor(0xffea00);
+
+// renderer.setClearColor(0xFFEA00);
+
+var textureLoader = new THREE.TextureLoader();
+scene.background = textureLoader.load(_ab.default);
+// const cubeTextureLoader = new THREE.CubeTextureLoader();
+// scene.background = cubeTextureLoader.load([ab, ab, bc, bc, bc, bc]);
+
+var cubeTextureLoader = new THREE.CubeTextureLoader();
+scene.background = cubeTextureLoader.load([_bc.default, _bc.default, _bc.default, _bc.default, _bc.default, _bc.default]);
+var box2Geometry = new THREE.BoxGeometry(4, 4, 4);
+var box2Material = new THREE.MeshBasicMaterial({
+  // color: 0x00ff00,
+  // map: textureLoader.load(bc),
+});
+var box2MultiMaterial = [new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_bc.default)
+}), new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_bc.default)
+}), new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_ab.default)
+}), new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_bc.default)
+}), new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_bc.default)
+}), new THREE.MeshBasicMaterial({
+  map: textureLoader.load(_ab.default)
+})];
+var box2 = new THREE.Mesh(box2Geometry, box2MultiMaterial);
+scene.add(box2);
+box2.position.set(0, 15, 10);
+box2.material.map = textureLoader.load(_bc.default);
 var gui = new dat.GUI();
 var options = {
   sphereColor: '#ffea00',
@@ -40405,6 +40443,12 @@ gui.add(options, 'angle', 0, 1);
 gui.add(options, 'penumbra', 0, 1);
 gui.add(options, 'intensity', 0, 1);
 var step = 0;
+var mousePosition = new THREE.Vector2();
+window.addEventListener('mousemove', function (e) {
+  mousePosition.x = e.clientX / window.innerWidth * 2 - 1;
+  mousePosition.y = -(e.clientY / window.innerHeight) * 2 + 1;
+});
+var rayCaster = new THREE.Raycaster();
 function animate(time) {
   box.rotation.x = time / 1000;
   box.rotation.y = time / 1000;
@@ -40414,10 +40458,13 @@ function animate(time) {
   spotLight.penumbra = options.penumbra;
   spotLight.intensity = options.intensity;
   sLightHelper.update();
+  rayCaster.setFromCamera(mousePosition, camera);
+  var intersects = rayCaster.intersectObjects(scene.children);
+  console.log(intersects);
   renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
-},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/controls/OrbitControls.js":"../node_modules/three/examples/jsm/controls/OrbitControls.js","dat.gui":"../node_modules/dat.gui/build/dat.gui.module.js"}],"C:/Users/Gautam Yadav/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/controls/OrbitControls.js":"../node_modules/three/examples/jsm/controls/OrbitControls.js","dat.gui":"../node_modules/dat.gui/build/dat.gui.module.js","../img/ab.jpg":"img/ab.jpg","../img/bc.jpg":"img/bc.jpg"}],"C:/Users/Gautam Yadav/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -40442,7 +40489,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51672" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58506" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

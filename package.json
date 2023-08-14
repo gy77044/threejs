@@ -21,6 +21,7 @@
     "parcel": "^2.9.3"
   },
   "dependencies": {
+    "da": "^0.0.3",
     "dat.gui": "^0.7.9",
     "three": "^0.155.0"
   }
