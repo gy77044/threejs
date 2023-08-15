@@ -146,8 +146,8 @@ function animate(time) {
   sLightHelper.update();
 
   rayCaster.setFromCamera(mousePosition, camera);
-  const intersects = rayCaster.intersectObjects(scene.children)
-  console.log(intersects)
+  const intersects = rayCaster.intersectObjects(scene.children);
+  console.log(intersects);
 
   renderer.render(scene, camera);
 }
